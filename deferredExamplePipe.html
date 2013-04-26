@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<style type="text/css">
+	tr {
+		display: block;
+		border: 1px solid red;
+		}
+	</style>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	
+	<script>
+		function log(msg) {
+		var $out=$("<div />");
+		$out.html(msg);
+		$("#console").append($out);
+	}
+	var x=["config1.json","config2.json","config3.json","config4.json","config5.json"];
+	function fireRequest(country,config) {
+			return $.ajax({
+				type: "GET",
+				url: config,
+				data: {country:country},
+				dataType: "JSON",
+				success: function(){
+					log("Successful request for [" + country + "]");
+				},
+				error: function(){
+					log("Unsuccessful request for [" + country + "]");
+				}
+			});
+	}
+
+	var countries=["US","CA","MX","IN","EN","UK"], startingpoint=$.Deferred();
+	startingpoint.resolve();
+
+	$.each(countries,function(ix,country) {
+		startingpoint=startingpoint.pipe( function() {
+			log("Making request for [" + country + "]");
+			
+			return fireRequest(country,x[ix]);
+		});
+	});
+
+	</script>
+	<title>Deferred Example Pipe</title>
+</head>
+<body>
+<div id='console'></div>
+</body>
+</html>

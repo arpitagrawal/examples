@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<style type="text/css">
+	tr {
+		display: block;
+		border: 1px solid red;
+		}
+	</style>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	
+	<script>
+		$(function($){
+ 
+			var $deferreds = [];
+		 
+			$('input','#example-pane')
+				.each(function(i,e) {
+					$deferreds[i] = $.Deferred();
+				})
+				.change(function(){
+					$deferreds[$('#example-pane').find('input').index(this)].resolve();
+				});
+		 
+			$.when.apply(null,$deferreds).then(function(){
+				$('span','#example-pane').text('complete').css('color','#6d6');	
+			});
+		});
+		
+		var deferred = $.Deferred();
+
+		deferred.resolve("hello world");
+
+		deferred.done(function(value) {
+			alert(value);
+		});
+		
+		
+	</script>
+	<title>Deferred</title>
+</head>
+<body>
+<div id="example-pane">Form is <span>incomplete</span>.<br />
+	<input type="text" /> First Name<br />
+	<input type="text" /> Second Name<br />
+	<input type="text" /> Third Name
+</div>
+</body>
+</html>
